@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>My Notes</h2>
+
+<!-- New Note Form -->
+<div class="mb-4">
+    <h3>Add New Note</h3>
+    <form method="POST" action="{{ url_for('notes.new_note') }}">
+        <div class="mb-3">
+            <input type="text" class="form-control" name="title" placeholder="Title" required>
+        </div>
+        <div class="mb-3">
+            <textarea class="form-control" name="content" placeholder="Content" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Note</button>
+    </form>
+</div>
+
+<!-- Notes List -->
+<div class="row">
+    {% for note in notes %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ note.title }}</h5>
+                <p class="card-text">{{ note.content }}</p>
+                <small class="text-muted">Created: {{ note.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                
+                <!-- Edit Button trigger modal -->
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ note.id }}">
+                    Edit
+                </button>
+                
+                <a href="{{ url_for('notes.delete_note', id=note.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal{{ note.id }}" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Note</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ url_for('notes.update_note', id=note.id) }}">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="title" value="{{ note.title }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" name="content" required>{{ note.content }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
