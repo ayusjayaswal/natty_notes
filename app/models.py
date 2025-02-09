@@ -4,7 +4,7 @@ from app import get_db, login_manager
 import psycopg2
 
 def get_db_connection():
-    conn = psycopg2.connect(postgresql://postgres:postgres@localhost:5432/test_db)
+    conn = psycopg2.connect("postgresql://postgres:postgres@localhost:5432/test_db")
     return conn
 
 class User(UserMixin):
