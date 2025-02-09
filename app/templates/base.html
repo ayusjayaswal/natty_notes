@@ -7,8 +7,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
     <style>
+        .element::webkit-scrollbar {
+            display:none;
+        }
         body {
             height:100vh;
+            padding-top: 6vh;
             font-family: 'Itim', serif;
             background-color: #f4ecd8;
             color: #5a4634;
@@ -16,6 +20,7 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
+            background-attachment: fixed;
         }
         .navbar {
             background-color: #343a40 !important;
@@ -32,7 +37,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('notes.list_notes') }}">natty_notes</a>
             <div class="navbar-nav">

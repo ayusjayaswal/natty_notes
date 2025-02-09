@@ -3,7 +3,7 @@
 {% block content %}
 <!-- New Note Form -->
 <div class="mb-4">
-    <h3>Add New Note</h3>
+    <h1>Add New Note</h1>
     <form method="POST" action="{{ url_for('notes.new_note') }}">
         <div class="mb-3">
             <input type="text" class="form-control" name="title" placeholder="Title" required>
