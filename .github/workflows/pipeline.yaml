@@ -28,12 +28,11 @@ jobs:
 
       - name: Run Pylint (Error Check Only)
         run: pylint --disable=all --enable=E app tests
-        # Only checking for actual errors
 
   test:
     name: Run Tests
     runs-on: ubuntu-latest
-    needs: check-errors  # Ensure no breaking errors before testing
+    needs: check-errors
 
     services:
       postgres:
@@ -72,3 +71,15 @@ jobs:
           SECRET_KEY: test-key
           PYTHONPATH: ${{ github.workspace }}
         run: pytest tests/
+
+  docker-build:
+    name: Docker Build Check
+    runs-on: ubuntu-latest
+    needs: [check-errors, test]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: docker build .
