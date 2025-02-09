@@ -19,7 +19,6 @@ def get_db():
 def init_db():
     conn = get_db()
     cur = conn.cursor()
-    
     # Create tables
     cur.execute('''
         CREATE TABLE IF NOT EXISTS users (
@@ -28,7 +27,6 @@ def init_db():
             password_hash VARCHAR(256) NOT NULL
         )
     ''')
-    
     cur.execute('''
         CREATE TABLE IF NOT EXISTS notes (
             id SERIAL PRIMARY KEY,
@@ -38,7 +36,6 @@ def init_db():
             user_id INTEGER REFERENCES users(id)
         )
     ''')
-    
     conn.commit()
     cur.close()
     conn.close()
@@ -46,13 +43,10 @@ def init_db():
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev')
-    
     login_manager.init_app(app)
-    
     with app.app_context():
         from app.routes import auth, notes
         app.register_blueprint(auth)
         app.register_blueprint(notes)
         init_db()
-    
     return app
