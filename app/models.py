@@ -2,6 +2,10 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import get_db, login_manager
 
+def get_db_connection():
+    conn = psycopg2.connect(DATABASE_URL)
+    return conn
+
 class User(UserMixin):
     def __init__(self, id, username, password_hash):
         self.id = id
