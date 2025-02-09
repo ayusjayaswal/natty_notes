@@ -1,34 +1,21 @@
+# tests/test_app.py
 import pytest
-import psycopg2
-from psycopg2.extras import DictCursor
-from app import create_app
+from app import create_app, db
+from app.models import User, Note
 
 @pytest.fixture
 def app():
     app = create_app()
-    app.config['TESTING'] = True
+    app.config.update({
+        'TESTING': True,
+        'SQLALCHEMY_DATABASE_URI': 'postgresql://postgres:postgres@localhost:5432/test_db'
+    })
     
-    # Setup test database
-    conn = psycopg2.connect(
-        dbname='postgres',
-        user='postgres',
-        password='postgres',
-        host='db'
-    )
-    conn.autocommit = True
-    cur = conn.cursor()
-    
-    # Create test database
-    cur.execute('DROP DATABASE IF EXISTS test_notes')
-    cur.execute('CREATE DATABASE test_notes')
-    
-    cur.close()
-    conn.close()
-    
-    # Use test database
-    app.config['DATABASE_URL'] = 'postgresql://postgres:postgres@db:5432/test_notes'
-    
-    yield app
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.session.remove()
+        db.drop_all()
 
 @pytest.fixture
 def client(app):
@@ -41,14 +28,5 @@ def test_register(client):
     }, follow_redirects=True)
     assert response.status_code == 200
     
-    # Verify user was created
-    conn = psycopg2.connect(
-        'postgresql://postgres:postgres@db:5432/test_notes',
-        cursor_factory=DictCursor
-    )
-    cur = conn.cursor()
-    cur.execute('SELECT * FROM users WHERE username = %s', ('testuser',))
-    assert cur.fetchone() is not None
-    cur.close()
-    conn.close()
-
+    with client.application.app_context():
+        assert User.query.filter_by(username='testuser').first() is not None
