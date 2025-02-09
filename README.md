@@ -1,4 +1,6 @@
-# 📒 NATTY NOTES
+# 📒 natty_notes
+
+![natty_notes](./art.png)
 
 This is a simple **CRUD Notes Application** built with **Flask, Flask-Login, and PostgreSQL**. The application allows users to create, read, update, and delete notes securely with authentication.
 
