@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import get_db, login_manager
+import psycopg2
 
 def get_db_connection():
     conn = psycopg2.connect(DATABASE_URL)
